@@ -169,6 +169,8 @@ return [
          * Package Service Providers...
          */
 
+        Laravolt\Indonesia\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -233,7 +235,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
-
+        'Indonesia' => Laravolt\Indonesia\Facade::class
     ],
 
 ];

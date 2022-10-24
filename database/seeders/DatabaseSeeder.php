@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Laravolt\Indonesia\Seeds\{DistrictsSeeder, CitiesSeeder, VillagesSeeder, ProvincesSeeder};
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +18,10 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            ProvincesSeeder::class,
+            CitiesSeeder::class,
+            DistrictsSeeder::class,
+            VillagesSeeder::class,
         ]);
     }
 }
