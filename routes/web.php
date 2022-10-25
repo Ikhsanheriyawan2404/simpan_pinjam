@@ -7,15 +7,15 @@ use App\Http\Controllers\{HomeController, UserController, RoleController, Pinjam
 Route::get('login', [LoginController::class, 'showLoginForm']);
 Route::post('login', [LoginController::class,'login'])->name('login');
 Route::post('logout',  [LoginController::class,'logout'])->name('logout');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('welcome', [HomeController::class, 'welcome']);
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        return view('home', [
+        return view('dashboard', [
             'title' => 'Home'
         ]);
-    })->name('home');
-
+    })->name('dashboard');
+    Route::get('profile/{id}', [HomeController::class, 'profile'])->name('profile');
 
     Route::resources(['users' => UserController::class]);
     Route::resources(['roles' => RoleController::class]);
