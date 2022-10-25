@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Bunga extends Model
 {
     use HasFactory;
+    protected $table = 'bunga';
 }

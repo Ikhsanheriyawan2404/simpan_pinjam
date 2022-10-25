@@ -15,7 +15,7 @@ class CreateBungaTable extends Migration
     {
         Schema::create('bunga', function (Blueprint $table) {
             $table->id();
-            $table->string('suku_bunga');
+            $table->float('suku_bunga');
             $table->timestamps();
         });
     }

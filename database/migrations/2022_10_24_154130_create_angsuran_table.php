@@ -16,7 +16,8 @@ class CreateAngsuranTable extends Migration
         Schema::create('angsuran', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('angsuran_keberapa');
+            $table->unsignedBigInteger('pinjaman_id');
+            $table->integer('angsuran_keberapa');
             $table->decimal('pokok', 15, 2);
             $table->decimal('bunga', 15, 2);
             $table->decimal('total', 15, 2);
@@ -26,6 +27,7 @@ class CreateAngsuranTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('pinjaman_id')->references('id')->on('pinjaman');
         });
     }
 

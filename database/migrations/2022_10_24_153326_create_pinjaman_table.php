@@ -19,14 +19,12 @@ class CreatePinjamanTable extends Migration
             $table->decimal('total_pinjaman', 15, 2);
             $table->decimal('saldo_pinjaman', 15, 2);
             $table->date('tanggal_pinjam');
-            $table->enum('status', ['1', '0'])->comment('1=acc 0=belum acc');
+            $table->enum('status', ['1', '0'])->comment('1=acc 0=belum acc')->default('0');
             $table->integer('tenor');
-
-
             $table->decimal('tunggakan', 15, 2)->nullable();
             $table->decimal('angsuran_bunga', 15, 2);
             $table->decimal('angsuran_pokok', 15, 2);
-            // $table->integer('suku_bunga');
+            $table->integer('suku_bunga');
             $table->decimal('total_angsuran', 15, 2);
             $table->text('keterangan');
             $table->timestamps();
