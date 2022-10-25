@@ -5,7 +5,7 @@
             <li>
                 <a href="{{ route('home') }}" class="mm-active">
                     <i class="metismenu-icon pe-7s-rocket"></i>
-                    Dashboard Example 1
+                    Dashboard
                 </a>
             </li>
             <li class="app-sidebar__heading">UI Components</li>
@@ -104,45 +104,6 @@
                         </a>
                     </li>
                 </ul>
-            </li>
-            <li>
-                <a href="tables-regular.html">
-                    <i class="metismenu-icon pe-7s-display2"></i>
-                    Tables
-                </a>
-            </li>
-            <li class="app-sidebar__heading">Widgets</li>
-            <li>
-                <a href="dashboard-boxes.html">
-                    <i class="metismenu-icon pe-7s-display2"></i>
-                    Dashboard Boxes
-                </a>
-            </li>
-            <li class="app-sidebar__heading">Forms</li>
-            <li>
-                <a href="forms-controls.html">
-                    <i class="metismenu-icon pe-7s-mouse">
-                    </i>Forms Controls
-                </a>
-            </li>
-            <li>
-                <a href="forms-layouts.html">
-                    <i class="metismenu-icon pe-7s-eyedropper">
-                    </i>Forms Layouts
-                </a>
-            </li>
-            <li>
-                <a href="forms-validation.html">
-                    <i class="metismenu-icon pe-7s-pendrive">
-                    </i>Forms Validation
-                </a>
-            </li>
-            <li class="app-sidebar__heading">Charts</li>
-            <li>
-                <a href="charts-chartjs.html">
-                    <i class="metismenu-icon pe-7s-graph2">
-                    </i>ChartJS
-                </a>
             </li>
             <li class="app-sidebar__heading">PRO Version</li>
             <li>
