@@ -170,6 +170,7 @@ return [
          */
 
         Laravolt\Indonesia\ServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
         /*
          * Application Service Providers...

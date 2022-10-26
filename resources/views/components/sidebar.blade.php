@@ -107,11 +107,14 @@
             </li>
             <li class="app-sidebar__heading">PRO Version</li>
             <li>
-                <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/" target="_blank">
-                    <i class="metismenu-icon pe-7s-graph2">
-                    </i>
-                    Upgrade to PRO
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="metismenu-icon"></i>
+                    Logout
                 </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
             </li>
         </ul>
     </div>

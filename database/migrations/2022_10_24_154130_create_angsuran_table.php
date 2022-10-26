@@ -15,7 +15,7 @@ class CreateAngsuranTable extends Migration
     {
         Schema::create('angsuran', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            // $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('pinjaman_id');
             $table->integer('angsuran_keberapa');
             $table->decimal('pokok', 15, 2);
@@ -26,8 +26,8 @@ class CreateAngsuranTable extends Migration
             $table->enum('status', ['1', '0'])->comment('0=belum bayar 1=sudah bayar')->default('0');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('pinjaman_id')->references('id')->on('pinjaman');
+            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('pinjaman_id')->references('id')->on('pinjaman')->onDelete('CASCADE');
         });
     }
 

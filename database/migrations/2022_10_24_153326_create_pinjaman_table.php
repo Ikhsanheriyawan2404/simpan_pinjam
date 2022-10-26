@@ -26,7 +26,7 @@ class CreatePinjamanTable extends Migration
             $table->decimal('angsuran_pokok', 15, 2);
             $table->integer('suku_bunga');
             $table->decimal('total_angsuran', 15, 2);
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
