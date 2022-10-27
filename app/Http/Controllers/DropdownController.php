@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Laravolt\Indonesia\Models\{City, District, Village};
 
 class DropdownController extends Controller

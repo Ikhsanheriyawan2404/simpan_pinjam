@@ -34,7 +34,6 @@ class PinjamanSeeder extends Seeder
 
         for ($i = 0; $i < $tenor; $i++) {
             Angsuran::create([
-                'user_id' => 1,
                 'pinjaman_id' => $pinjaman->id,
                 'pokok' => $pinjaman->angsuran_pokok,
                 'bunga' => $pinjaman->angsuran_bunga,

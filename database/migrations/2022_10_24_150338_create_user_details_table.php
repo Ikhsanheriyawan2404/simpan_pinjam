@@ -15,14 +15,6 @@ class CreateUserDetailsTable extends Migration
     {
         Schema::create('user_details', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('telepon');
-            $table->unsignedBigInteger('provinsi');
-            $table->unsignedBigInteger('kota');
-            $table->unsignedBigInteger('kecamatan');
-            $table->unsignedBigInteger('desa');
-            $table->string('pekerjaan');
-            $table->string('nik');
-            $table->text('address');
             $table->timestamps();
         });
     }

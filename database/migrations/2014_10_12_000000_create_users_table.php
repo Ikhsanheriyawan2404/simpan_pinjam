@@ -20,6 +20,14 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('telepon')->nullable();
+            $table->foreignId('provinsi')->nullable();
+            $table->foreignId('kota')->nullable();
+            $table->foreignId('kecamatan')->nullable();
+            $table->foreignId('desa')->nullable();
+            $table->string('pekerjaan')->nullable();
+            $table->string('nik')->nullable();
+            $table->text('alamat')->nullable();
             $table->timestamps();
         });
     }

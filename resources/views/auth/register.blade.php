@@ -23,11 +23,12 @@
                     </div>
                     <div class="card-body">
                         <form action="{{ route('register') }}" method="post">
+                            @csrf
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="name">Email</label>
-                                        <input name="name" id="name"
+                                        <label for="email">Email</label>
+                                        <input name="email" id="email"
                                             class="form-control form-control-sm @error('email') is-invalid @enderror"
                                             value="{{ old('email') }}">
                                         @error('email')
@@ -37,8 +38,58 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Password</label>
+                                        <label for="password">Password</label>
+                                        <input name="password" id="password" class="form-control form-control-sm">
+                                    </div>
+                                    @error('password')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                    <div class="form-group">
+                                        <label for="password_confirmation">Konfirmasi Password</label>
+                                        <input name="password_confirmation" id="password_confirmation" class="form-control form-control-sm">
+                                        @error('password_confirmation')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Nama Lengkap</label>
                                         <input name="name" id="name" class="form-control form-control-sm">
+                                        @error('name')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nik">NIK KTP</label>
+                                        <input name="nik" id="nik" class="form-control form-control-sm">
+                                        @error('nik')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="telepon">Telepon</label>
+                                        <input type="number" name="telepon" id="telepon" class="form-control form-control-sm">
+                                        @error('telepon')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pekerjaan">Pekerjaan</label>
+                                        <input type="text" name="pekerjaan" id="pekerjaan" class="form-control form-control-sm">
+                                        @error('pekerjaan')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -93,13 +144,19 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-
+                                    <div class="form-group">
+                                        <label for="alamat">Alamat</label>
+                                        <textarea name="alamat" id="alamat" class="form-control form-control-sm"></textarea>
+                                        @error('alamat')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
+                            <button type="submit" class="btn btn-sm btn-primary my-3 float-right">Submit</button>
                         </form>
-                        <button type="submit" class="btn btn-sm btn-primary my-3 float-right">Submit</button>
                     </div>
                 </div>
             </div>
@@ -115,9 +172,13 @@
             let kecamatanId = $('#kecamatan').val();
             $('#provinsi').select2();
             $('#provinsi').change(function() {
+                $('#kota').empty();
+                $('#kecamatan').empty();
+                $("#desa").empty();
                 let provinceId = $(this).val();
                 if (provinceId) {
                     $('#kota').select2({
+                        placeholder: 'Pilih Kota/Kabupaten',
                         allowClear: true,
                         ajax: {
                             url: "{{ route('dropdown.kota') }}?provinceId=" + provinceId,
@@ -146,6 +207,7 @@
                 let kotaId = $(this).val();
                 if (kotaId) {
                     $('#kecamatan').select2({
+                        placeholder: 'Pilih Kecamatan',
                         allowClear: true,
                         ajax: {
                             url: "{{ route('dropdown.kecamatan') }}?kotaId=" + kotaId,
@@ -172,11 +234,13 @@
             });
 
             $('#kecamatan').select2();
+            $('#desa').select2();
             $('#kecamatan').change(function() {
                 $("#desa").empty();
                 let kecamatanId = $(this).val();
                 if (kecamatanId) {
                     $('#desa').select2({
+                        placeholder: 'Pilih Desa',
                         allowClear: true,
                         ajax: {
                             url: "{{ route('dropdown.desa') }}?kecamatanId=" + kecamatanId,

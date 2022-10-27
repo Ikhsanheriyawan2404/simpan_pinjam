@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Exception;
 use App\Models\User;
+use App\Models\UserDetail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -54,6 +57,13 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'telepon' => ['required', 'max:255'],
+            'nik' => ['required', 'max:255'],
+            'pekerjaan' => ['required', 'max:255'],
+            'provinsi' => ['required'],
+            'kota' => ['required'],
+            'kecamatan' => ['required'],
+            'desa' => ['required'],
         ]);
     }
 
@@ -72,10 +82,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'nik' => $data['nik'],
+                'telepon' => $data['telepon'],
+                'pekerjaan' => $data['pekerjaan'],
+                'provinsi' => $data['provinsi'],
+                'kota' => $data['kota'],
+                'kecamatan' => $data['kecamatan'],
+                'desa' => $data['desa'],
+                'alamat' => $data['alamat'],
+            ]);
     }
 }
