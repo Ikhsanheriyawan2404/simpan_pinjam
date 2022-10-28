@@ -1,5 +1,311 @@
-@extends('layoutsa.app', ['title' => 'Data Pinjaman'])
+@extends('layouts/app', ['title' => 'Data Pinjaman'])
 
 @section('content')
-    
+@include('sweetalert::alert')
+    <div class="app-main__inner">
+        <div class="app-page-title">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="page-title-icon">
+                        <i class="pe-7s-car icon-gradient bg-mean-fruit">
+                        </i>
+                    </div>
+                    <div>Users
+                        <div class="page-title-subheading">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+                                <li class="active breadcrumb-item" aria-current="page">Pinjaman</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-title-actions">
+                    <a class="btn btn-sm btn-success" data-toggle="modal" data-target="#importExcel">Impor <i class="fa fa-file-import"></i></a>
+                    <a href="{{ route('pinjaman.export') }}" class="btn-shadow btn-sm mr-3 btn btn-primary">
+                        Export
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-card mb-3 card">
+            <div class="card-header">
+                <h5 class="card-title">Data Users</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="mb-0 table table-striped table-hover table-bordered table-sm" id="data-table">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th class="text-center" width="3%">No</th>
+                                <th>Nama</th>
+                                <th>Total Pinjaman</th>
+                                <th>Sisa Pinjaman</th>
+                                <th>Tanggal Pinjam</th>
+                                <th>Status</th>
+                                <th>Tenor</th>
+                                <th>Tunggakan</th>
+                                <th>Angsuran Bunga</th>
+                                <th>Angsuran Pokok</th>
+                                <th>Angsuran Total</th>
+                                <th>Ket</th>
+                                <th class="text-center"><i class="fa fa-cogs"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('custom-styles')
+    <!-- DataTables {
+                data: 'date',
+                name: 'date'
+            },-->
+    <link rel="stylesheet" href="{{ asset('template') }}/plugins/datatables/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('template') }}/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+@endsection
+
+@section('custom-scripts')
+
+    <!-- DataTables  & Plugins -->
+    <script src="{{ asset('template') }}/plugins/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('template') }}/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{ asset('template') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="{{ asset('template') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+<script>
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+$(function() {
+    let table = $('#data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+
+        ajax: "{{ route('pinjaman.index') }}",
+        columns: [{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false,
+                className: 'dt-body-center'
+            },
+            {
+                data: 'user_id',
+                name: 'user.name'
+            },
+            {
+                data: 'total_pinjaman',
+                name: 'total_pinjaman'
+            },
+            {
+                data: 'saldo_pinjaman',
+                name: 'saldo_pinjaman'
+            },
+            {
+                data: 'tanggal_pinjam',
+                name: 'tanggal_pinjam'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'tenor',
+                name: 'tenor'
+            },
+            {
+                data: 'tunggakan',
+                name: 'tunggakan'
+            },
+            {
+                data: 'angsuran_bunga',
+                name: 'angsuran_bunga'
+            },
+            {
+                data: 'angsuran_pokok',
+                name: 'angsuran_pokok'
+            },
+            {
+                data: 'total_angsuran',
+                name: 'total_angsuran'
+            },
+            {
+                data: 'keterangan',
+                name: 'keterangan'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                className: 'dt-body-center'
+            },
+        ],
+    });
+
+    $('body').on('click', '#showDetails', function () {
+        var pinjaman_id = $(this).data('id');
+        $.get("{{ route('pinjaman.index') }}" + '/' + pinjaman_id, function(data) {
+            $('#detailsModal').modal('show');
+            $.each(data.angsuran, function (key, value) {
+                let button = '<form method="post" action="{{route('angsuran.index')}}"><button type="submit" class="btn btn-sm btn-primary">Ubah</form>';
+                $('#tbody').append(`
+                    <tr>
+                        <td>${value.angsuran_keberapa}</td>
+                        <td>${value.total}</td>
+                        <td>${value.bunga}</td>
+                        <td>${value.pokok}</td>
+                        <td>
+                            ${value.status == 0 ? button : 'fdsaf'}
+                        </td>
+                    </tr>`);
+            });
+        });
+    });
+});
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModal" style="display: none;"
+aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModal">Users Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table-sm table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Angusran Ke bereap</th>
+                            <th>Anguran Total</th>
+                            <th>Anguran Bunga</th>
+                            <th>Anguran Pokok</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL IMPORT EXCEL -->
+<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="detailsModal" style="display: none;"
+aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModal">Import Pinjaman</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-primary">
+                    <div class="card-header"><h3 class="card-title">Petunjuk Import Data Pinjaman</h3></div>
+                    <div class="card-body">
+                        <ul class="mb-3">
+                            <li>Baris 1 = Nama Siswa</li>
+                            <li>Baris 2 = NISN Siswa</li>
+                            <li>Baris 3 = Jenis Kelamin (L/P)</li>
+                            <li>Baris 4 = Agama</li>
+                            <li>Baris 5 = Nama Kelas</li>
+                            <li>Baris 6 = Tanggal Lahir</li>
+                            <li>Baris 7 = No HP</li>
+                            <li>Baris 8 = Email</li>
+                            <li>Baris 9 = Alamat</li>
+                        </ul>
+                        <form action="{{ route('pinjaman.import') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group">
+                                <label for="file">Import Disini <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control form-control-sm">
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- <div class="modal fade" id="importExcel">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <form action="{{ route('pinjaman.import') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">Import Excel</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div>
+                <div class="modal-body">
+                    <div class="card card-primary">
+                        <div class="card-header"></div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Baris 1 = Nama Siswa</li>
+                                <li>Baris 2 = NISN Siswa</li>
+                                <li>Baris 3 = Jenis Kelamin (L/P)</li>
+                                <li>Baris 4 = Agama</li>
+                                <li>Baris 5 = Nama Kelas</li>
+                                <li>Baris 6 = Tanggal Lahir</li>
+                                <li>Baris 7 = No HP</li>
+                                <li>Baris 8 = Email</li>
+                                <li>Baris 9 = Alamat</li>
+                            </ul>
+                        </div>
+                    </div>
+                    @csrf
+                    <div class="form-group">
+                        <label for="customFile">Masukan file excel <span class="text-danger">*</span></label>
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input @error('file') is-invalid @enderror" id="customFile" required>
+                            <label class="custom-file-label" for="customFile">Pilih file</label>
+                            @error('file')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-right">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            </form>
+        </div>
+    <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div> --}}
+<!-- /.modal import excel -->
 @endsection

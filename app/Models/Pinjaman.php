@@ -19,6 +19,11 @@ class Pinjaman extends Model
         return $this->hasMany(Angsuran::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getAngsuranAttribute()
     {
         return $this->total_pinjaman / $this->tenor * Bunga::find(1)->suku_bunga / 100;
