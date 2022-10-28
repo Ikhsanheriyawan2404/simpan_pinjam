@@ -22,7 +22,7 @@ class PinjamanSeeder extends Seeder
         $pinjaman = Pinjaman::create([
             'user_id' => 1,
             'total_pinjaman' => $totalPinjaman,
-            'saldo_pinjaman' => $totalPinjaman +  $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100 * $tenor,
+            'saldo_pinjaman' => $totalPinjaman + $totalPinjaman * $suku_bunga / 100 * $tenor,
             'tanggal_pinjam' => date('Y-m-d'),
             'tenor' => $tenor,
             'angsuran_pokok' => $totalPinjaman / $tenor,

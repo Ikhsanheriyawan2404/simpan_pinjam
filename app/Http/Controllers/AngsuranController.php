@@ -2,16 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Angsuran;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use App\Models\{Angsuran, Pinjaman};
 use Illuminate\Support\Facades\Storage;
 
 class AngsuranController extends Controller
 {
     public function status(Angsuran $angsuran)
     {
-        Angsuran::where('id', $angsuran->id)->update([
-            'status' => request('status')
-        ]);
+        try {
+            DB::transaction(function () use ($angsuran) {
+                Angsuran::where('id', $angsuran->id)->update([
+                    'status' => request('status')
+                ]);
+                if (request('status') == 1) {
+                    Pinjaman::where('id', $angsuran->pinjaman_id)->update([
+                        'saldo_pinjaman' => DB::raw("saldo_pinjaman - $angsuran->total")
+                    ]);
+                } else if (request('status' == 0)) {
+                    Pinjaman::where('id', $angsuran->pinjaman_id)->update([
+                        'saldo_pinjaman' => DB::raw("saldo_pinjaman + $angsuran->total")
+                    ]);
+                }
+            });
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
 
         return redirect()->back();
     }

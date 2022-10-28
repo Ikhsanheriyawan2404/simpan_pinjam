@@ -216,7 +216,43 @@
         </div>
         <div class="row mb-2">
             <div class="col-md-12">
-                <table class="table table-sm table-bordered">
+                <h3>Data Pinjaman</h3>
+                <table class="table table-sm table-bordered table-striped">
+                    <thead class="table-dark bg-white">
+                        <tr>
+                            <th>Status</th>
+                            <th>Angsuran Per Bulan</th>
+                            <th>Total Pinjaman</th>
+                            <th>No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($pinjaman as $item)
+                        <tr>
+                            <td>
+                                @php
+                                if ($item->status == NULL) {
+                                    echo 'Menunggu';
+                                } else if ($item->status == 1) {
+                                    echo 'Diterima';
+                                } else {
+                                    echo 'Ditolak';
+                                }
+                                @endphp
+                            </td>
+                            <td>{{ number_format($item->total_angsuran, 0) }}</td>
+                            <td>{{ number_format($item->total_pinjaman, 0) }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <h3>Data Angsuran</h3>
+                <table class="table table-sm table-bordered table-striped">
                     <thead class="table-dark bg-white">
                         <tr>
                             <th>Aksi</th>
@@ -279,6 +315,7 @@
                         <div class="form-group">
                             <label for="tenor">Jangka Peminjaman</label>
                             <select class="form-control form-control-sm" name="tenor">
+                                <option selected disabled>Pilih Tenor</option>
                                 <option value="1">1 Bulan</option>
                                 <option value="3">3 Bulan</option>
                                 <option value="6">6 Bulan</option>

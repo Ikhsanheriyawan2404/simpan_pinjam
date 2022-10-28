@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\{Bunga, Angsuran, Pinjaman};
@@ -17,6 +19,9 @@ class PinjamanController extends Controller
                 ->addIndexColumn()
                 ->editColumn('user_id', function (Pinjaman $pinjaman) {
                     return $pinjaman->user->name;
+                })
+                ->editColumn('saldo_pinjaman', function (Pinjaman $pinjaman) {
+                    return $pinjaman->saldo_pinjaman < 0 ? 0 : $pinjaman->saldo_pinjaman;
                 })
                 ->addColumn('status', function ($row) {
                     $tolak = '<form action="'.route('pinjaman.status', $row->id).'" method="post">
@@ -57,31 +62,41 @@ class PinjamanController extends Controller
 
     public function store()
     {
-        $totalPinjaman = request('total_pinjaman');
-        $tenor = request('tenor');
-        $suku_bunga = Bunga::find(1)->suku_bunga;
-        $pinjaman = Pinjaman::create([
-            'user_id' => auth()->user()->id,
-            'total_pinjaman' => $totalPinjaman,
-            'saldo_pinjaman' => $totalPinjaman +  $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100 * $tenor,
-            'tanggal_pinjam' => date('Y-m-d'),
-            'tenor' => $tenor,
-            'angsuran_pokok' => $totalPinjaman / $tenor,
-            'angsuran_bunga' => $totalPinjaman * $suku_bunga / 100,
-            'total_angsuran' => $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100,
-            'keterangan' => '-',
-            'suku_bunga' => $suku_bunga * $tenor,
+        request()->validate([
+            'total_pinjaman' => 'required',
+            'tenor' => 'required',
         ]);
+        try {
+            DB::transaction(function () {
+                $totalPinjaman = request('total_pinjaman');
+                $tenor = request('tenor');
+                $suku_bunga = Bunga::find(1)->suku_bunga;
+                $pinjaman = Pinjaman::create([
+                    'user_id' => auth()->user()->id,
+                    'total_pinjaman' => $totalPinjaman,
+                    'saldo_pinjaman' => $totalPinjaman +  $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100 * $tenor,
+                    'tanggal_pinjam' => date('Y-m-d'),
+                    'tenor' => $tenor,
+                    'angsuran_pokok' => $totalPinjaman / $tenor,
+                    'angsuran_bunga' => $totalPinjaman * $suku_bunga / 100,
+                    'total_angsuran' => $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100,
+                    'keterangan' => '-',
+                    'suku_bunga' => $suku_bunga * $tenor,
+                ]);
 
-        for ($i = 0; $i < $tenor; $i++) {
-            Angsuran::create([
-                'pinjaman_id' => $pinjaman->id,
-                'pokok' => $pinjaman->angsuran_pokok,
-                'bunga' => $pinjaman->angsuran_bunga,
-                'total' => $pinjaman->total_angsuran,
-                'tanggal' => date('Y-m-d'),
-                'angsuran_keberapa' => $i+1,
-            ]);
+                for ($i = 0; $i < $tenor; $i++) {
+                    Angsuran::create([
+                        'pinjaman_id' => $pinjaman->id,
+                        'pokok' => $pinjaman->angsuran_pokok,
+                        'bunga' => $pinjaman->angsuran_bunga,
+                        'total' => $pinjaman->total_angsuran,
+                        'tanggal' => date('Y-m-d'),
+                        'angsuran_keberapa' => $i+1,
+                    ]);
+                }
+            });
+        } catch (Exception $e) {
+            return response()->json($e->getMessage());
         }
 
         return redirect()->back();
@@ -105,10 +120,4 @@ class PinjamanController extends Controller
         ]);
         return redirect()->back();
     }
-
-    // public function import()
-    // {
-    //     Excel::import(new PinjamanImport, 'pinjaman.xlsx');
-    //     return redirect()->route('pinjaman.index')->with('success', 'All good!');
-    // }
 }

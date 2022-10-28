@@ -14,14 +14,16 @@ class HomeController extends Controller
     public function profile($id)
     {
         $user = User::find($id);
-        // return response()->json(Pinjaman::with('angsuran')->where('user_id', $user->id)->get());
         return view('profile', [
             'user' => $user,
+            'pinjaman' => Pinjaman::where('user_id', $id)->get(),
             'angsuran' => Angsuran::with('pinjaman')
                 ->whereHas('pinjaman', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
-                })->get(),
+                    $q->where('status', 1);
+                })
+                ->get(),
         ]);
     }
-    
+
 }

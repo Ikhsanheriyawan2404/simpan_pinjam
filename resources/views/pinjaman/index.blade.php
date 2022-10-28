@@ -43,13 +43,12 @@
                                 <th>Total Pinjaman</th>
                                 <th>Sisa Pinjaman</th>
                                 <th>Tanggal Pinjam</th>
-                                <th>Status</th>
                                 <th>Tenor</th>
                                 <th>Tunggakan</th>
                                 <th>Angsuran Bunga</th>
                                 <th>Angsuran Pokok</th>
                                 <th>Angsuran Total</th>
-                                <th>Ket</th>
+                                <th>Status</th>
                                 <th class="text-center"><i class="fa fa-cogs"></i></th>
                             </tr>
                         </thead>
@@ -117,10 +116,6 @@ $(function() {
                 name: 'tanggal_pinjam'
             },
             {
-                data: 'status',
-                name: 'status'
-            },
-            {
                 data: 'tenor',
                 name: 'tenor'
             },
@@ -141,8 +136,8 @@ $(function() {
                 name: 'total_angsuran'
             },
             {
-                data: 'keterangan',
-                name: 'keterangan'
+                data: 'status',
+                name: 'status'
             },
             {
                 data: 'action',
