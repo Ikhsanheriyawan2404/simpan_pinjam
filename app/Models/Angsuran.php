@@ -16,4 +16,9 @@ class Angsuran extends Model
     {
         return $this->belongsTo(Pinjaman::class);
     }
+
+    public function getTakeImageAttribute()
+    {
+        return '/storage/' . $this->bukti_transaksi;
+    }
 }

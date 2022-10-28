@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Angsuran;
+use Illuminate\Support\Facades\Storage;
 
 class AngsuranController extends Controller
 {
-    public function index()
+    public function status(Angsuran $angsuran)
     {
-        Angsuran::where('id', request('angsuran_id'))->update([
-            'status' => 1
+        Angsuran::where('id', $angsuran->id)->update([
+            'status' => request('status')
         ]);
 
         return redirect()->back();
@@ -17,8 +18,16 @@ class AngsuranController extends Controller
 
     public function upload(Angsuran $angsuran)
     {
+        request()->validate(['bukti_transaksi' => 'required|image|mimes:jpg,jpeg,png']);
+        if ($angsuran->bukti_transaksi) {
+            Storage::delete($angsuran->bukti_transaksi);
+        }
+        $image = request()->file('bukti_transaksi')->store('img/bukti_transaksi');
+
         $angsuran->update([
-            'bukti_transaksi' => request('bukti_transaksi')
+            'bukti_transaksi' => $image
         ]);
+
+        return redirect()->back();
     }
 }

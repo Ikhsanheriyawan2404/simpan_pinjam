@@ -220,6 +220,7 @@
                     <thead class="table-dark bg-white">
                         <tr>
                             <th>Aksi</th>
+                            <th>Aksi</th>
                             <th>Bukti</th>
                             <th>Status</th>
                             <th>Pinjaman Id</th>
@@ -230,15 +231,16 @@
                     <tbody>
                         @foreach ($angsuran as $item)
                         <tr>
-                            <form action="{{ route('angsuran.upload') }}" method="post">
+                            <form action="{{ route('angsuran.upload', $item->id) }}" method="post" enctype="multipart/form-data">
+                                @csrf
                                 <td>
                                     <button type="submit" class="btn btn-sm btn-primary">Upload</button>
                                 </td>
                                 <td>
-                                    <input type="file">
+                                    <input type="file" name="bukti_transaksi">
                                 </td>
                             </form>
-                            <td>{{ $item->bukti_transaksi ?? 'not uplod' }}</td>
+                            <td><img src="{{ $item->takeImage }}" width="100"></td>
                             <td>{{ $item->pinjaman_id }}</td>
                             <td>{{ $item->total }}</td>
                             <td>{{ $item->status }}</td>

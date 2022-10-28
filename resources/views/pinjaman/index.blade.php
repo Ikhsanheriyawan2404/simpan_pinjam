@@ -159,19 +159,25 @@ $(function() {
         $.get("{{ route('pinjaman.index') }}" + '/' + pinjaman_id, function(data) {
             $('#detailsModal').modal('show');
             $.each(data.angsuran, function (key, value) {
-                let button = '<form method="post" action="{{route('angsuran.index')}}"><button type="submit" class="btn btn-sm btn-primary">Ubah</form>';
+                var url = "{{route('angsuran.status', '')}}"+"/"+value.id;
+                var csrf = $('meta[name="csrf-token"]').attr('content');
+                let pending = `<form method="post" action="${url}"><input type="hidden" name="_token" value=${csrf}><input type="hidden" name="status" value="1"><button type="submit" class="btn btn-sm btn-warning">Pending</form>`;
+                var paid = `<form method="post" action="${url}"><input type="hidden" name="_token" value=${csrf}><input type="hidden" name="status" value="0"><button type="submit" class="btn btn-sm btn-primary">Paid</form>`;
                 $('#tbody').append(`
-                    <tr>
+                    <tr class="yaya">
                         <td>${value.angsuran_keberapa}</td>
                         <td>${value.total}</td>
                         <td>${value.bunga}</td>
                         <td>${value.pokok}</td>
+                        <td><img src="/storage/${value.bukti_transaksi}" width="100"></td>
                         <td>
-                            ${value.status == 0 ? button : 'fdsaf'}
+                            ${value.status == 0 ? pending : paid}
                         </td>
                     </tr>`);
             });
         });
+        // Menhapus elemen djancok
+        $('tr.yaya').remove();
     });
 });
 </script>
@@ -179,7 +185,7 @@ $(function() {
 <!-- Modal -->
 <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModal" style="display: none;"
 aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detailsModal">Users Detail</h5>
@@ -188,13 +194,14 @@ aria-hidden="true">
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table-sm table-bordered table-striped">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Angusran Ke bereap</th>
                             <th>Anguran Total</th>
                             <th>Anguran Bunga</th>
                             <th>Anguran Pokok</th>
+                            <th>Bukti</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -254,58 +261,5 @@ aria-hidden="true">
         </div>
     </div>
 </div>
-{{-- <div class="modal fade" id="importExcel">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <form action="{{ route('pinjaman.import') }}" method="post" enctype="multipart/form-data">
-            @csrf
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal-title">Import Excel</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div>
-                <div class="modal-body">
-                    <div class="card card-primary">
-                        <div class="card-header"></div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Baris 1 = Nama Siswa</li>
-                                <li>Baris 2 = NISN Siswa</li>
-                                <li>Baris 3 = Jenis Kelamin (L/P)</li>
-                                <li>Baris 4 = Agama</li>
-                                <li>Baris 5 = Nama Kelas</li>
-                                <li>Baris 6 = Tanggal Lahir</li>
-                                <li>Baris 7 = No HP</li>
-                                <li>Baris 8 = Email</li>
-                                <li>Baris 9 = Alamat</li>
-                            </ul>
-                        </div>
-                    </div>
-                    @csrf
-                    <div class="form-group">
-                        <label for="customFile">Masukan file excel <span class="text-danger">*</span></label>
-                        <div class="custom-file">
-                            <input type="file" name="file" class="custom-file-input @error('file') is-invalid @enderror" id="customFile" required>
-                            <label class="custom-file-label" for="customFile">Pilih file</label>
-                            @error('file')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer justify-content-right">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-            </form>
-        </div>
-    <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div> --}}
 <!-- /.modal import excel -->
 @endsection
