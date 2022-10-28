@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::resources(['roles' => RoleController::class]);
     Route::get('pinjaman/export', [PinjamanController::class, 'export'])->name('pinjaman.export');
     Route::post('pinjaman/import', [PinjamanController::class, 'import'])->name('pinjaman.import');
+    Route::post('pinjaman/status/{pinjaman}', [PinjamanController::class, 'status'])->name('pinjaman.status');
+    Route::post('angsuran/upload', [AngsuranController::class, 'upload'])->name('angsuran.upload');
     Route::resources(['pinjaman' => PinjamanController::class]);
     Route::resources(['angsuran' => AngsuranController::class]);
 });

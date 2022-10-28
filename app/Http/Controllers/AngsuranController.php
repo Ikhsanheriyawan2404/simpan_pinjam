@@ -14,4 +14,11 @@ class AngsuranController extends Controller
 
         return redirect()->back();
     }
+
+    public function upload(Angsuran $angsuran)
+    {
+        $angsuran->update([
+            'bukti_transaksi' => request('bukti_transaksi')
+        ]);
+    }
 }

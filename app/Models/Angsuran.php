@@ -11,4 +11,9 @@ class Angsuran extends Model
 
     protected $guarded = [];
     protected $table = 'angsuran';
+
+    public function pinjaman()
+    {
+        return $this->belongsTo(Pinjaman::class);
+    }
 }

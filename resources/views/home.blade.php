@@ -37,8 +37,6 @@
                 font-size: 3.5rem;
             }
         }
-    </style>
-    <style>
         /* stylelint-disable selector-list-comma-newline-after */
 
         .blog-header {
@@ -187,7 +185,26 @@
                             <path d="M21 21l-5.2-5.2" />
                         </svg>
                     </a>
-                    <a class="btn btn-sm btn-outline-secondary" href="#">إنشاء حساب</a>
+                    @guest
+                        @if (Route::has('login'))
+                            <a class="p-2 link-secondary" href="{{ route('login') }}">Login</a>
+                        @endif
+
+                        @if (Route::has('register'))
+                            <a class="p-2 link-secondary" href="{{ route('register') }}">Register</a>
+                        @endif
+                    @else
+                        <a class="p-2 link-secondary" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+                        <a class="p-2 link-secondary" href="{{ route('profile', auth()->user()->id) }}"> {{ auth()->user()->name }}</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    @endguest
                 </div>
             </div>
         </header>
