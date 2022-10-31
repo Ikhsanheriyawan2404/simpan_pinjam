@@ -17,15 +17,18 @@
                         <h3 class="card-title">Login</h3>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="name">Email</label>
-                            <input name="name" id="name" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Password</label>
-                            <input name="name" id="name" class="form-control form-control-sm">
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-primary my-3 float-right">Submit</button>
+                        <form action="{{ route('login') }}" method="post">
+                        @csrf
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input name="email" id="email" class="form-control form-control-sm">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control form-control-sm">
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary my-3 float-right">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>

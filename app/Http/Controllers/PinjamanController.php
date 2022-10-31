@@ -21,7 +21,7 @@ class PinjamanController extends Controller
                     return $pinjaman->user->name;
                 })
                 ->editColumn('saldo_pinjaman', function (Pinjaman $pinjaman) {
-                    return $pinjaman->saldo_pinjaman < 0 ? 0 : $pinjaman->saldo_pinjaman;
+                    return $pinjaman->saldo_pinjaman <= 0 ? 0 : $pinjaman->saldo_pinjaman;
                 })
                 ->addColumn('status', function ($row) {
                     $tolak = '<form action="'.route('pinjaman.status', $row->id).'" method="post">
@@ -74,7 +74,7 @@ class PinjamanController extends Controller
                 $pinjaman = Pinjaman::create([
                     'user_id' => auth()->user()->id,
                     'total_pinjaman' => $totalPinjaman,
-                    'saldo_pinjaman' => $totalPinjaman +  $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100 * $tenor,
+                    'saldo_pinjaman' => $totalPinjaman + $totalPinjaman * $suku_bunga / 100 * $tenor,
                     'tanggal_pinjam' => date('Y-m-d'),
                     'tenor' => $tenor,
                     'angsuran_pokok' => $totalPinjaman / $tenor,

@@ -20,7 +20,7 @@ class AngsuranController extends Controller
                     Pinjaman::where('id', $angsuran->pinjaman_id)->update([
                         'saldo_pinjaman' => DB::raw("saldo_pinjaman - $angsuran->total")
                     ]);
-                } else if (request('status' == 0)) {
+                } else if (request('status') == 0) {
                     Pinjaman::where('id', $angsuran->pinjaman_id)->update([
                         'saldo_pinjaman' => DB::raw("saldo_pinjaman + $angsuran->total")
                     ]);
