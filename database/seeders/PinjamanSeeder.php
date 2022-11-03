@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Angsuran;
+use Carbon\Carbon;
 use App\Models\Bunga;
+use App\Models\Angsuran;
 use App\Models\Pinjaman;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +24,7 @@ class PinjamanSeeder extends Seeder
             'user_id' => 1,
             'total_pinjaman' => $totalPinjaman,
             'saldo_pinjaman' => $totalPinjaman + $totalPinjaman * $suku_bunga / 100 * $tenor,
-            'tanggal_pinjam' => date('Y-m-d'),
+            'tanggal_pinjam' => '2022-07-19',
             'tenor' => $tenor,
             'angsuran_pokok' => $totalPinjaman / $tenor,
             'angsuran_bunga' => $totalPinjaman * $suku_bunga / 100,
@@ -38,7 +39,7 @@ class PinjamanSeeder extends Seeder
                 'pokok' => $pinjaman->angsuran_pokok,
                 'bunga' => $pinjaman->angsuran_bunga,
                 'total' => $pinjaman->total_angsuran,
-                'tanggal' => date('Y-m-d'),
+                'jatuh_tempo' => Carbon::parse($pinjaman->tanggal_pinjam)->addMonth($i+1)->format('Y-m-d'),
                 'angsuran_keberapa' => $i+1,
             ]);
         }

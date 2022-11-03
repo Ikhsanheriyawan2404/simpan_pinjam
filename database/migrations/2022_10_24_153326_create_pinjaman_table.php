@@ -18,7 +18,7 @@ class CreatePinjamanTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->decimal('total_pinjaman', 15, 2);
             $table->decimal('saldo_pinjaman', 15, 2);
-            $table->date('tanggal_pinjam');
+            $table->date('tanggal_pinjam')->nullable();
             $table->enum('status', ['1', '0'])->comment('1=acc 0=belum acc')->nullable();
             $table->integer('tenor');
             $table->decimal('tunggakan', 15, 2)->nullable();

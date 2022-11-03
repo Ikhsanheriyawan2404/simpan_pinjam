@@ -221,6 +221,11 @@
                     <thead class="table-dark bg-white">
                         <tr>
                             <th>Status</th>
+                            <th>Suku Bunga</th>
+                            <th>Jangka</th>
+                            <th>Tanggal Pinjam</th>
+                            <th>Tunggakan</th>
+                            <th>Sisa Pinjaman</th>
                             <th>Angsuran Per Bulan</th>
                             <th>Total Pinjaman</th>
                             <th>No</th>
@@ -240,6 +245,11 @@
                                 }
                                 @endphp
                             </td>
+                            <td>{{ $item->suku_bunga }} %</td>
+                            <td>{{ $item->tenor }} Bulan</td>
+                            <td>{{ $item->tanggal_pinjam ? date('d-m-Y', strtotime($item->tanggal_pinjam)) : '' }}</td>
+                            <td>{{ number_format($item->arrears, 0) }}</td>
+                            <td>{{ number_format($item->saldo_pinjaman, 0) }}</td>
                             <td>{{ number_format($item->total_angsuran, 0) }}</td>
                             <td>{{ number_format($item->total_pinjaman, 0) }}</td>
                             <td>{{ $loop->iteration }}</td>
@@ -259,8 +269,11 @@
                             <th>Aksi</th>
                             <th>Bukti</th>
                             <th>Status</th>
-                            <th>Pinjaman Id</th>
-                            <th>Total Pinjaman</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Total</th>
+                            <th>Bunga</th>
+                            <th>Pokok</th>
+                            <th>Angsuran Ke</th>
                             <th>No</th>
                         </tr>
                     </thead>
@@ -277,9 +290,23 @@
                                 </td>
                             </form>
                             <td><img src="{{ $item->takeImage }}" width="100"></td>
-                            <td>{{ $item->pinjaman_id }}</td>
-                            <td>{{ $item->total }}</td>
-                            <td>{{ $item->status }}</td>
+                            <td>
+                                @php
+                                if ($item->status == 1) {
+                                    $status = '<a class="btn btn-sm btn-primary">Sudah bayar</a>';
+                                } else if ($item->status == 0 && \Carbon\Carbon::now() > $item->jatuh_tempo) {
+                                    $status = '<a class="btn btn-sm btn-danger">Telat</a>';
+                                } else {
+                                    $status = '<a class="btn btn-sm btn-warning">Belum Bayar</a>';
+                                }
+                                echo $status;
+                                @endphp
+                            </td>
+                            <td>{{ date('d-m-Y', strtotime($item->jatuh_tempo)) }}</td>
+                            <td>{{ number_format($item->total, 0) }}</td>
+                            <td>{{ number_format($item->bunga, 0) }}</td>
+                            <td>{{ number_format($item->pokok, 0) }}</td>
+                            <td>{{ $item->angsuran_keberapa }}</td>
                             <td>{{ $loop->iteration }}</td>
                         </tr>
                         @endforeach

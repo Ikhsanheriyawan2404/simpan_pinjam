@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\{Bunga, Angsuran, Pinjaman};
-use App\Exports\{PinjamanExport, PinjamanImport};
 
 class PinjamanController extends Controller
 {
@@ -44,6 +43,7 @@ class PinjamanController extends Controller
                             </a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="showDetails">Detail</a>
+                                <a class="dropdown-item" href="' . route('angsuran.export', $row->id) . '" class="btn btn-primary btn-sm">Export</a>
                                 <form action=" ' . route('pinjaman.destroy', $row->id) . '" method="POST">
                                     <button type="submit" class="dropdown-item" onclick="return confirm(\'Apakah yakin ingin menghapus ini?\')">Hapus</button>
                                 ' . csrf_field() . '
@@ -75,8 +75,8 @@ class PinjamanController extends Controller
                     'user_id' => auth()->user()->id,
                     'total_pinjaman' => $totalPinjaman,
                     'saldo_pinjaman' => $totalPinjaman + $totalPinjaman * $suku_bunga / 100 * $tenor,
-                    'tanggal_pinjam' => date('Y-m-d'),
                     'tenor' => $tenor,
+                    // 'tanggal_pinjam' => date('Y-m-d'),
                     'angsuran_pokok' => $totalPinjaman / $tenor,
                     'angsuran_bunga' => $totalPinjaman * $suku_bunga / 100,
                     'total_angsuran' => $totalPinjaman / $tenor + $totalPinjaman * $suku_bunga / 100,
@@ -90,7 +90,7 @@ class PinjamanController extends Controller
                         'pokok' => $pinjaman->angsuran_pokok,
                         'bunga' => $pinjaman->angsuran_bunga,
                         'total' => $pinjaman->total_angsuran,
-                        'tanggal' => date('Y-m-d'),
+                        'jatuh_tempo' => Carbon::parse($pinjaman->tanggal_pinjam)->addMonth($i+1)->format('Y-m-d'),
                         'angsuran_keberapa' => $i+1,
                     ]);
                 }
@@ -108,15 +108,11 @@ class PinjamanController extends Controller
         return response()->json($pinjaman);
     }
 
-    public function export()
-    {
-        return Excel::download(new PinjamanExport, 'pinjaman.xlsx');
-    }
-
     public function status(Pinjaman $pinjaman)
     {
         $pinjaman->update([
-            'status' => request('status')
+            'status' => request('status'),
+            'tanggal_pinjam' => date('Y-m-d'),
         ]);
         return redirect()->back();
     }

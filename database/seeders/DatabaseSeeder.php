@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            BungaSeeder::class,
+            // PinjamanSeeder::class,
             ProvincesSeeder::class,
             CitiesSeeder::class,
             DistrictsSeeder::class,
             VillagesSeeder::class,
-            BungaSeeder::class,
-            PinjamanSeeder::class,
         ]);
     }
 }

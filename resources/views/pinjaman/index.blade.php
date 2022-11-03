@@ -10,7 +10,7 @@
                         <i class="pe-7s-car icon-gradient bg-mean-fruit">
                         </i>
                     </div>
-                    <div>Users
+                    <div>PINJAMAN
                         <div class="page-title-subheading">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="">Dashboard</a></li>
@@ -44,9 +44,10 @@
                                 <th>Sisa Pinjaman</th>
                                 <th>Tanggal Pinjam</th>
                                 <th>Tenor</th>
+                                <th>Suku Bunga</th>
                                 <th>Tunggakan</th>
-                                <th>Angsuran Bunga</th>
-                                <th>Angsuran Pokok</th>
+                                {{-- <th>Angsuran Bunga</th> --}}
+                                {{-- <th>Angsuran Pokok</th> --}}
                                 <th>Angsuran Total</th>
                                 <th>Status</th>
                                 <th class="text-center"><i class="fa fa-cogs"></i></th>
@@ -120,17 +121,21 @@ $(function() {
                 name: 'tenor'
             },
             {
-                data: 'tunggakan',
-                name: 'tunggakan'
+                data: 'suku_bunga',
+                name: 'suku_bunga'
             },
             {
-                data: 'angsuran_bunga',
-                name: 'angsuran_bunga'
+                data: 'arrears',
+                name: 'arrears'
             },
-            {
-                data: 'angsuran_pokok',
-                name: 'angsuran_pokok'
-            },
+            // {
+            //     data: 'angsuran_bunga',
+            //     name: 'angsuran_bunga'
+            // },
+            // {
+            //     data: 'angsuran_pokok',
+            //     name: 'angsuran_pokok'
+            // },
             {
                 data: 'total_angsuran',
                 name: 'total_angsuran'
@@ -157,16 +162,22 @@ $(function() {
                 var url = "{{route('angsuran.status', '')}}"+"/"+value.id;
                 var csrf = $('meta[name="csrf-token"]').attr('content');
                 let pending = `<form method="post" action="${url}"><input type="hidden" name="_token" value=${csrf}><input type="hidden" name="status" value="1"><button type="submit" class="btn btn-sm btn-warning">Pending</form>`;
-                var paid = `<form method="post" action="${url}"><input type="hidden" name="_token" value=${csrf}><input type="hidden" name="status" value="0"><button type="submit" class="btn btn-sm btn-primary">Paid</form>`;
+                var paid = `<form method="post" action="${url}"><input type="hidden" name="_token" value=${csrf}><input type="hidden" name="status" value="0"><button type="submit" class="btn btn-sm btn-primary">Bayar</form>`;
+                var late = `<button type="submit" class="btn btn-sm btn-danger">Telat</button>`;
+                let date = new Date().toISOString().split('T')[0];
                 $('#tbody').append(`
                     <tr class="yaya">
                         <td>${value.angsuran_keberapa}</td>
+                        <td>${value.jatuh_tempo}</td>
                         <td>${value.total}</td>
                         <td>${value.bunga}</td>
                         <td>${value.pokok}</td>
                         <td><img src="/storage/${value.bukti_transaksi}" width="100"></td>
                         <td>
                             ${value.status == 0 ? pending : paid}
+                        </td>
+                        <td>
+                            ${value.jatuh_tempo < date && value.status == 0 ? late : ''}
                         </td>
                     </tr>`);
             });
@@ -193,11 +204,13 @@ aria-hidden="true">
                     <thead>
                         <tr>
                             <th>Angusran Ke bereap</th>
+                            <th>Tgl jatuh tempo</th>
                             <th>Anguran Total</th>
                             <th>Anguran Bunga</th>
                             <th>Anguran Pokok</th>
                             <th>Bukti</th>
                             <th>Status</th>
+                            <th><i class="fa fa-cogs"></i></th>
                         </tr>
                     </thead>
                     <tbody id="tbody">
